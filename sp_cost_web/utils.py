@@ -87,7 +87,8 @@ def compute_costs(scenario2erpt=None,
                   penalty_tib_per_yr=0.0,
                   power_cost_tib_per_yr=6, 
                   bandwidth_10gbps_tib_per_yr=6, 
-                  staff_cost_tib_per_yr=10
+                  staff_cost_tib_per_yr=10,
+                  offset_pct=50
                   ):
     erpt = scenario2erpt[onboarding_scenario]
     
@@ -132,10 +133,11 @@ def compute_costs(scenario2erpt=None,
             self_deal_net_profit += v
         else:
             self_deal_net_profit -= v
-        
+    offset_frac = offset_pct/100.0
+    self_deal_net_profit_offset = self_deal_net_profit*offset_frac
     filp_offset = {
         'SP Type':'FIL+ Offset',
-        'block_rewards': erpt*exchange_rate*filp_multiplier-self_deal_net_profit,
+        'block_rewards': erpt*exchange_rate*filp_multiplier-self_deal_net_profit_offset,
         'deal_income': deal_income_tib_per_yr,
         'pledge_cost': erpt*exchange_rate*filp_multiplier*borrowing_cost_pct,
         'gas_cost': gas_cost_tib_per_yr,
@@ -150,7 +152,7 @@ def compute_costs(scenario2erpt=None,
     }
     filp_selfdeal_offset = {
         'SP Type':'FIL+ Self-Deal Offset',
-        'block_rewards': erpt*exchange_rate*filp_multiplier-self_deal_net_profit,
+        'block_rewards': erpt*exchange_rate*filp_multiplier-self_deal_net_profit_offset,
         'deal_income': 0,
         'pledge_cost': erpt*exchange_rate*filp_multiplier*borrowing_cost_pct,
         'gas_cost': gas_cost_tib_per_yr,

@@ -45,6 +45,7 @@ def compute_costs(scenario2erpt=None):
     rd_bd_cost_tib_per_yr = st.session_state['rd_bizdev_cost']
     deal_income_tib_per_yr = st.session_state['deal_income']
     data_prep_cost_tib_per_yr = st.session_state['data_prep_cost']
+    offset_pct = st.session_state['offset_pct']
     
     power_cost_tib_per_yr = st.session_state['power_cost']
     bw_cost_tib_per_yr = st.session_state['bw_cost']
@@ -59,7 +60,8 @@ def compute_costs(scenario2erpt=None):
         deal_income_tib_per_yr=deal_income_tib_per_yr,
         data_prep_cost_tib_per_yr=data_prep_cost_tib_per_yr, penalty_tib_per_yr=0,
         power_cost_tib_per_yr=power_cost_tib_per_yr, bandwidth_10gbps_tib_per_yr=bw_cost_tib_per_yr,
-        staff_cost_tib_per_yr=staff_cost_tib_per_yr
+        staff_cost_tib_per_yr=staff_cost_tib_per_yr,
+        offset_pct=offset_pct
     )
     plot_costs(df)
 
@@ -188,6 +190,11 @@ with st.sidebar:
         st.slider(
             'Staff Cost ($/TiB/Yr)', 
             min_value=0.0, max_value=50.0, value=8.0, step=1.0, format='%0.02f', key="staff_cost",
+            on_change=compute_costs, kwargs=compute_costs_kwargs, disabled=False, label_visibility="visible"
+        )
+        st.slider(
+            'Offset Percentage', 
+            min_value=0.0, max_value=100.0, value=50.0, step=1.0, format='%0.02f', key="offset_pct",
             on_change=compute_costs, kwargs=compute_costs_kwargs, disabled=False, label_visibility="visible"
         )
     with st.expander("Multipliers", expanded=False):
